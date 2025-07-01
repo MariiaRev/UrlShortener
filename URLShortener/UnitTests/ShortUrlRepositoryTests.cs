@@ -5,7 +5,7 @@ using URLShortener.Repositories;
 
 namespace UnitTests
 {
-    public class UrlShortenerRepositoryTests
+    public class ShortUrlRepositoryTests
     {
         [Fact]
         public async Task AddAsync_ShouldAddShortUrl()
@@ -15,7 +15,7 @@ namespace UnitTests
                 .Options;
 
             using var context = new AppDbContext(options);
-            var repo = new UrlShortenerRepository(context);
+            var repo = new ShortUrlRepository(context);
 
             var shortUrl = new ShortUrl { Key = "key", OriginalUrl = "original", CreatedDate = DateTime.UtcNow };
 
@@ -33,7 +33,7 @@ namespace UnitTests
                 .Options;
 
             using var context = new AppDbContext(options);
-            var repo = new UrlShortenerRepository(context);
+            var repo = new ShortUrlRepository(context);
 
             var shortUrl1 = new ShortUrl { Key = "key1", OriginalUrl = "original1", CreatedDate = DateTime.UtcNow.AddDays(-2) };
             var shortUrl2 = new ShortUrl { Key = "key2", OriginalUrl = "original2", CreatedDate = DateTime.UtcNow.AddDays(-1) };
@@ -62,7 +62,7 @@ namespace UnitTests
                 .Options;
 
             using var context = new AppDbContext(options);
-            var repo = new UrlShortenerRepository(context);
+            var repo = new ShortUrlRepository(context);
 
             var shortUrl = new ShortUrl { Key = keyStr, OriginalUrl = urlStr, CreatedDate = DateTime.UtcNow };
             var shortUrl1 = new ShortUrl { Key = "key1", OriginalUrl = "original1", CreatedDate = DateTime.UtcNow };
@@ -86,7 +86,7 @@ namespace UnitTests
                 .Options;
 
             using var context = new AppDbContext(options);
-            var repo = new UrlShortenerRepository(context);
+            var repo = new ShortUrlRepository(context);
 
             var keyStr = "key";
             var shortUrl1 = new ShortUrl { Key = "key1", OriginalUrl = "original1", CreatedDate = DateTime.UtcNow };
@@ -112,7 +112,7 @@ namespace UnitTests
                 .Options;
 
             using var context = new AppDbContext(options);
-            var repo = new UrlShortenerRepository(context);
+            var repo = new ShortUrlRepository(context);
 
             var shortUrl = new ShortUrl { Key = keyStr, OriginalUrl = urlStr, CreatedDate = DateTime.UtcNow };
             var shortUrl1 = new ShortUrl { Key = "key1", OriginalUrl = "original1", CreatedDate = DateTime.UtcNow };
@@ -139,7 +139,7 @@ namespace UnitTests
                 .Options;
 
             using var context = new AppDbContext(options);
-            var repo = new UrlShortenerRepository(context);
+            var repo = new ShortUrlRepository(context);
 
             var id = -1;
             var shortUrl1 = new ShortUrl { Key = "key1", OriginalUrl = "original1", CreatedDate = DateTime.UtcNow };
@@ -163,7 +163,7 @@ namespace UnitTests
                 .Options;
 
             using var context = new AppDbContext(options);
-            var repo = new UrlShortenerRepository(context);
+            var repo = new ShortUrlRepository(context);
 
             var userId = "11";
             List<ShortUrl> shortUrls =
@@ -196,7 +196,7 @@ namespace UnitTests
                 .Options;
 
             using var context = new AppDbContext(options);
-            var repo = new UrlShortenerRepository(context);
+            var repo = new ShortUrlRepository(context);
 
             var userId = "11";
             List<ShortUrl> shortUrls =
@@ -229,7 +229,7 @@ namespace UnitTests
                 .Options;
 
             using var context = new AppDbContext(options);
-            var repo = new UrlShortenerRepository(context);
+            var repo = new ShortUrlRepository(context);
 
             List<ShortUrl> shortUrls =
                 [
@@ -263,7 +263,7 @@ namespace UnitTests
                 .Options;
 
             using var context = new AppDbContext(options);
-            var repo = new UrlShortenerRepository(context);
+            var repo = new ShortUrlRepository(context);
 
             List<ShortUrl> shortUrls =
                 [
@@ -292,7 +292,7 @@ namespace UnitTests
                 .Options;
 
             using var context = new AppDbContext(options);
-            var repo = new UrlShortenerRepository(context);
+            var repo = new ShortUrlRepository(context);
 
             List<ShortUrl> shortUrls =
                 [
@@ -319,7 +319,7 @@ namespace UnitTests
                 .Options;
 
             using var context = new AppDbContext(options);
-            var repo = new UrlShortenerRepository(context);
+            var repo = new ShortUrlRepository(context);
 
             List<ShortUrl> shortUrls = [];
 
@@ -337,7 +337,7 @@ namespace UnitTests
                 .Options;
 
             using var context = new AppDbContext(options);
-            var repo = new UrlShortenerRepository(context);
+            var repo = new ShortUrlRepository(context);
 
             var shortUrl1 = new ShortUrl { Key = "key1", OriginalUrl = "original1", CreatedDate = DateTime.UtcNow };
             var shortUrl2 = new ShortUrl { Key = "key2", OriginalUrl = "original2", CreatedDate = DateTime.UtcNow };
@@ -363,7 +363,7 @@ namespace UnitTests
                 .Options;
 
             using var context = new AppDbContext(options);
-            var repo = new UrlShortenerRepository(context);
+            var repo = new ShortUrlRepository(context);
 
             var shortUrl1 = new ShortUrl { Key = "key1", OriginalUrl = "original1", CreatedDate = DateTime.UtcNow };
             var shortUrl2 = new ShortUrl { Key = "key2", OriginalUrl = "original2", CreatedDate = DateTime.UtcNow };
@@ -385,7 +385,7 @@ namespace UnitTests
                 .Options;
 
             using var context = new AppDbContext(options);
-            var repo = new UrlShortenerRepository(context);
+            var repo = new ShortUrlRepository(context);
 
             var shortUrl1 = new ShortUrl { Key = "key1", OriginalUrl = "original1", CreatedDate = DateTime.UtcNow };
             var shortUrl2 = new ShortUrl { Key = "key2", OriginalUrl = "original2", CreatedDate = DateTime.UtcNow };
@@ -412,7 +412,7 @@ namespace UnitTests
                 .Options;
 
             using var context = new AppDbContext(options);
-            var repo = new UrlShortenerRepository(context);
+            var repo = new ShortUrlRepository(context);
 
             var shortUrl1 = new ShortUrl { Key = "key1", OriginalUrl = "original1", CreatedDate = DateTime.UtcNow };
             var shortUrl2 = new ShortUrl { Key = "key2", OriginalUrl = "original2", CreatedDate = DateTime.UtcNow };
@@ -438,7 +438,7 @@ namespace UnitTests
                 .Options;
 
             using var context = new AppDbContext(options);
-            var repo = new UrlShortenerRepository(context);
+            var repo = new ShortUrlRepository(context);
 
             var shortUrl1 = new ShortUrl { Key = "key1", OriginalUrl = "original1", CreatedDate = DateTime.UtcNow };
             var shortUrl2 = new ShortUrl { Key = "key2", OriginalUrl = "original2", CreatedDate = DateTime.UtcNow };
@@ -460,7 +460,7 @@ namespace UnitTests
                 .Options;
 
             using var context = new AppDbContext(options);
-            var repo = new UrlShortenerRepository(context);
+            var repo = new ShortUrlRepository(context);
 
             var shortUrl1 = new ShortUrl { Key = "key1", OriginalUrl = "original1", CreatedDate = DateTime.UtcNow };
             var shortUrl2 = new ShortUrl { Key = "key2", OriginalUrl = "original2", CreatedDate = DateTime.UtcNow };
@@ -482,7 +482,7 @@ namespace UnitTests
                 .Options;
 
             using var context = new AppDbContext(options);
-            var repo = new UrlShortenerRepository(context);
+            var repo = new ShortUrlRepository(context);
 
             var userId = "11";
 
@@ -518,7 +518,7 @@ namespace UnitTests
                 .Options;
 
             using var context = new AppDbContext(options);
-            var repo = new UrlShortenerRepository(context);
+            var repo = new ShortUrlRepository(context);
 
             List<ShortUrl> shortUrls =
                 [
@@ -548,7 +548,7 @@ namespace UnitTests
                 .Options;
 
             using var context = new AppDbContext(options);
-            var repo = new UrlShortenerRepository(context);
+            var repo = new ShortUrlRepository(context);
 
             var userId = "11";
             List<ShortUrl> shortUrls = [];
@@ -570,7 +570,7 @@ namespace UnitTests
                 .Options;
 
             using var context = new AppDbContext(options);
-            var repo = new UrlShortenerRepository(context);
+            var repo = new ShortUrlRepository(context);
 
             var shortUrl = new ShortUrl { Key = "key1", OriginalUrl = "original1", CreatedDate = DateTime.UtcNow, UserId = "21sd" };
             List<ShortUrl> shortUrls =
@@ -601,7 +601,7 @@ namespace UnitTests
                 .Options;
 
             using var context = new AppDbContext(options);
-            var repo = new UrlShortenerRepository(context);
+            var repo = new ShortUrlRepository(context);
 
             List<ShortUrl> shortUrls =
                 [

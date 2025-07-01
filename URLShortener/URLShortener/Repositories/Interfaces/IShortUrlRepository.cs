@@ -2,7 +2,7 @@
 
 namespace URLShortener.Repositories.Interfaces
 {
-    public interface IUrlShortenerRepository
+    public interface IShortUrlRepository
     {
         Task AddAsync(ShortUrl shortUrl);
         Task<ShortUrl?> GetByKeyAsync (string key);
