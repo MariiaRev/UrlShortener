@@ -572,10 +572,10 @@ namespace UnitTests
             using var context = new AppDbContext(options);
             var repo = new ShortUrlRepository(context);
 
-            var shortUrl = new ShortUrl { Key = "key1", OriginalUrl = "original1", CreatedDate = DateTime.UtcNow, UserId = "21sd" };
+            var url = "original3";
             List<ShortUrl> shortUrls =
                 [
-                    shortUrl,
+                    new ShortUrl { Key = "key1", OriginalUrl = "original1", CreatedDate = DateTime.UtcNow, UserId = "21sd" },
                     new ShortUrl { Key = "key2", OriginalUrl = "original2", CreatedDate = DateTime.UtcNow },
                     new ShortUrl { Key = "key3", OriginalUrl = "original3", CreatedDate = DateTime.UtcNow, UserId = "12cx" },
                     new ShortUrl { Key = "key4", OriginalUrl = "original4", CreatedDate = DateTime.UtcNow, UserId = "kodjfj" },
@@ -586,7 +586,7 @@ namespace UnitTests
 
             await repo.AddRangeAsync(shortUrls);
 
-            bool result = await repo.ExistAsync(shortUrl.OriginalUrl);
+            bool result = await repo.ExistAsync(url);
             Assert.True(result);
         }
     
@@ -614,6 +614,61 @@ namespace UnitTests
                 ];
 
             bool result = await repo.ExistAsync(originalUrl);
+            Assert.False(result);
+        }
+    
+        [Fact]
+        public async Task ExistKeyAsync_ShouldReturnTrue()
+        {
+            var options = new DbContextOptionsBuilder<AppDbContext>()
+                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+                .Options;
+
+            using var context = new AppDbContext(options);
+            var repo = new ShortUrlRepository(context);
+
+            var key = "key2";
+            List<ShortUrl> shortUrls =
+                [
+                    new ShortUrl { Key = "key1", OriginalUrl = "original1", CreatedDate = DateTime.UtcNow, UserId = "12cx" },
+                    new ShortUrl { Key = "key2", OriginalUrl = "original2", CreatedDate = DateTime.UtcNow },
+                    new ShortUrl { Key = "key3", OriginalUrl = "original3", CreatedDate = DateTime.UtcNow, UserId = "12cx" },
+                    new ShortUrl { Key = "key4", OriginalUrl = "original4", CreatedDate = DateTime.UtcNow, UserId = "kodjfj" },
+                    new ShortUrl { Key = "key5", OriginalUrl = "original5", CreatedDate = DateTime.UtcNow, UserId = "12cx" },
+                    new ShortUrl { Key = "key6", OriginalUrl = "original6", CreatedDate = DateTime.UtcNow, UserId = "12cx" },
+                    new ShortUrl { Key = "key7", OriginalUrl = "original7", CreatedDate = DateTime.UtcNow, UserId = "21sd" }
+                ];
+
+            await repo.AddRangeAsync(shortUrls);
+
+            bool result = await repo.ExistKeyAsync(key);
+            Assert.True(result);
+        }
+    
+        [Theory]
+        [InlineData("key1")]
+        [InlineData("")]
+        [InlineData(null)]
+        public async Task ExistKeyAsync_ShouldReturnFalse(string key)
+        {
+            var options = new DbContextOptionsBuilder<AppDbContext>()
+                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+                .Options;
+
+            using var context = new AppDbContext(options);
+            var repo = new ShortUrlRepository(context);
+
+            List<ShortUrl> shortUrls =
+                [
+                    new ShortUrl { Key = "key2", OriginalUrl = "original2", CreatedDate = DateTime.UtcNow },
+                    new ShortUrl { Key = "key3", OriginalUrl = "original3", CreatedDate = DateTime.UtcNow, UserId = "12cx" },
+                    new ShortUrl { Key = "key4", OriginalUrl = "original4", CreatedDate = DateTime.UtcNow, UserId = "kodjfj" },
+                    new ShortUrl { Key = "key5", OriginalUrl = "original5", CreatedDate = DateTime.UtcNow, UserId = "12cx" },
+                    new ShortUrl { Key = "key6", OriginalUrl = "original6", CreatedDate = DateTime.UtcNow, UserId = "12cx" },
+                    new ShortUrl { Key = "key7", OriginalUrl = "original7", CreatedDate = DateTime.UtcNow, UserId = "21sd" }
+                ];
+
+            bool result = await repo.ExistKeyAsync(key);
             Assert.False(result);
         }
     }

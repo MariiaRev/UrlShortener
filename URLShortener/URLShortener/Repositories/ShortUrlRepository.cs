@@ -67,6 +67,11 @@ namespace URLShortener.Repositories
             return _context.ShortUrls.AnyAsync(x => x.OriginalUrl == originalUrl);
         }
 
+        public Task<bool> ExistKeyAsync(string key)
+        {
+            return _context.ShortUrls.AnyAsync(x => x.Key == key);
+        }
+
         // for unit tests only
         public async Task AddRangeAsync(IEnumerable<ShortUrl> shortUrls)
         {
