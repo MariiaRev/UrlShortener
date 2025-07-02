@@ -61,6 +61,12 @@ namespace URLShortener.Repositories
             _context.RemoveRange(shortUrls);
             await _context.SaveChangesAsync();
         }
+        
+        public async Task DeleteAllAsync()
+        {
+            _context.RemoveRange(_context.ShortUrls);
+            await _context.SaveChangesAsync();
+        }
 
         public Task<bool> ExistAsync(string originalUrl)
         {

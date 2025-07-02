@@ -12,6 +12,7 @@ namespace URLShortener.Repositories.Interfaces
         Task DeleteAsync(ShortUrl shortUrl);
         Task DeleteRangeAsync(IEnumerable<ShortUrl> shortUrls);
         Task DeleteAllByUserIdAsync(string userId);
+        Task DeleteAllAsync();
         Task<bool> ExistAsync(string originalUrl);
         Task<bool> ExistKeyAsync(string key);
     }
