@@ -3,7 +3,7 @@ using URLShortener.Data;
 using URLShortener.Models;
 using URLShortener.Repositories;
 
-namespace UnitTests
+namespace UnitTests.ReposTests
 {
     public class ShortUrlRepositoryTests
     {
@@ -24,7 +24,7 @@ namespace UnitTests
             var exists = await repo.ExistAsync(shortUrl.OriginalUrl);
             Assert.True(exists);
         }
-        
+
         [Fact]
         public async Task AddRangeAsync_ShouldAddShortUrls()
         {
@@ -77,7 +77,7 @@ namespace UnitTests
 
             Assert.Equal(shortUrl, result);
         }
-    
+
         [Fact]
         public async Task GetByKeyAsync_ShouldNotGetShortUrl()
         {
@@ -101,7 +101,7 @@ namespace UnitTests
 
             Assert.Null(result);
         }
-    
+
         [Theory]
         [InlineData("https://example.com", "a1234")]
         [InlineData("example.com", "")]
@@ -130,7 +130,7 @@ namespace UnitTests
 
             Assert.Equal(shortUrl, result);
         }
-    
+
         [Fact]
         public async Task GetByIdAsync_ShouldNotGetShortUrl()
         {
@@ -154,7 +154,7 @@ namespace UnitTests
 
             Assert.Null(result);
         }
-        
+
         [Fact]
         public async Task GetByUserIdAsync_ShouldGetShortUrls()
         {
@@ -176,7 +176,7 @@ namespace UnitTests
                     new ShortUrl { Key = "key6", OriginalUrl = "original6", CreatedDate = DateTime.UtcNow, UserId = userId },
                     new ShortUrl { Key = "key7", OriginalUrl = "original7", CreatedDate = DateTime.UtcNow, UserId = "21sd" }
                 ];
-            
+
             List<ShortUrl> expectedResult = shortUrls.Where(x => x.UserId == userId).ToList();
 
             await repo.AddRangeAsync(shortUrls);
@@ -184,7 +184,7 @@ namespace UnitTests
             var result = await repo.GetByUserIdAsync(userId, 0, 10);
             Assert.Equal(result, expectedResult);
         }
-        
+
         [Theory]
         [InlineData(0, 2)]
         [InlineData(1, 2)]
@@ -209,7 +209,7 @@ namespace UnitTests
                     new ShortUrl { Key = "key6", OriginalUrl = "original6", CreatedDate = DateTime.UtcNow, UserId = userId },
                     new ShortUrl { Key = "key7", OriginalUrl = "original7", CreatedDate = DateTime.UtcNow, UserId = "21sd" }
                 ];
-            
+
             List<ShortUrl> expectedResult = shortUrls.Where(x => x.UserId == userId).Skip(skip).Take(take).ToList();
 
             await repo.AddRangeAsync(shortUrls);
@@ -217,7 +217,7 @@ namespace UnitTests
             var result = await repo.GetByUserIdAsync(userId, skip, take);
             Assert.Equal(result, expectedResult);
         }
-        
+
         [Theory]
         [InlineData("12jdc")]
         [InlineData("")]
@@ -310,7 +310,7 @@ namespace UnitTests
             var result = await repo.GetAllAsync(0, shortUrls.Count);
             Assert.Equal(result, shortUrls);
         }
-    
+
         [Fact]
         public async Task GetAllAsync_ShouldGetEmptyList()
         {
@@ -354,7 +354,7 @@ namespace UnitTests
 
             Assert.Equal(result, expectedResult);
         }
-    
+
         [Fact]
         public async Task DeleteAsync_ShouldThrowException()
         {
@@ -403,7 +403,7 @@ namespace UnitTests
 
             Assert.Equal(result, expectedResult);
         }
-        
+
         [Fact]
         public async Task DeleteRangeAsync_ShouldNotDeleteEmptyShortUrls()
         {
@@ -451,7 +451,7 @@ namespace UnitTests
 
             await Assert.ThrowsAsync<DbUpdateConcurrencyException>(() => repo.DeleteRangeAsync([shortUrl1, notInDb]));
         }
-        
+
         [Fact]
         public async Task DeleteRangeAsync_ShouldThrowExceptionIfNull()
         {
@@ -471,7 +471,7 @@ namespace UnitTests
 
             await repo.AddRangeAsync(shortUrls);
 
-            await Assert.ThrowsAsync<ArgumentNullException>(() => repo.DeleteRangeAsync(null)) ;
+            await Assert.ThrowsAsync<ArgumentNullException>(() => repo.DeleteRangeAsync(null));
         }
 
         [Fact]
@@ -506,7 +506,7 @@ namespace UnitTests
 
             Assert.Equal(result, expectedResult);
         }
-        
+
         [Theory]
         [InlineData("11")]
         [InlineData("")]
@@ -589,7 +589,7 @@ namespace UnitTests
             bool result = await repo.ExistAsync(url);
             Assert.True(result);
         }
-    
+
         [Theory]
         [InlineData("original1")]
         [InlineData("")]
@@ -616,7 +616,7 @@ namespace UnitTests
             bool result = await repo.ExistAsync(originalUrl);
             Assert.False(result);
         }
-    
+
         [Fact]
         public async Task ExistKeyAsync_ShouldReturnTrue()
         {
@@ -644,7 +644,7 @@ namespace UnitTests
             bool result = await repo.ExistKeyAsync(key);
             Assert.True(result);
         }
-    
+
         [Theory]
         [InlineData("key1")]
         [InlineData("")]
