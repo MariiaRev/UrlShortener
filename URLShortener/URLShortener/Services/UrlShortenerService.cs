@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.SymbolStore;
 using System.Security.Cryptography;
+using URLShortener.Core.Results;
 using URLShortener.Helpers;
 using URLShortener.Models;
 using URLShortener.Repositories.Interfaces;
@@ -41,6 +42,24 @@ namespace URLShortener.Services
             string key = await GenerateKeyAsync(originalUrl);
 
             return new ShortUrl { Key = key, OriginalUrl = originalUrl, UserId = userId, CreatedDate = DateTime.UtcNow };
+        }
+
+        public async Task<OperationResult<string>> GetOriginalUrlByShortCode(string shortCode)
+        {
+            try
+            {
+                var shortUrl = await _repository.GetByKeyAsync(shortCode);
+
+                if (shortUrl is null)
+                    return OperationResult<string>.Fail("Url was not found by shorting.", "NotFound");
+
+                return OperationResult<string>.Ok(shortUrl.OriginalUrl);
+
+            }
+            catch (Exception ex)
+            {
+                return OperationResult<string>.Fail(ex.Message);
+            }
         }
     }
 }

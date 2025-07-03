@@ -15,11 +15,13 @@ namespace URLShortener.Services
         private readonly IUserService _userService = userService;
 
         // all
+
+        // TODO: return ShortUrlDto with only OriginalUrl and short representation
         public async Task<OperationResult<List<ShortUrl>>> GetAllShortUrlsAsync(int page, int pageSize)
         {
             if (page <=0 && pageSize <=0)
             {
-                return OperationResult<List<ShortUrl>>.Fail("Page and PageSize must be greater than zero.", "Invalid_Paggination_Data");
+                return OperationResult<List<ShortUrl>>.Fail("Page and PageSize must be greater than zero.", "InvalidData");
             }
 
             var urlList = await _repository.GetAllAsync(page, pageSize);
@@ -36,13 +38,13 @@ namespace URLShortener.Services
 
             if(!IsValidUrl(url))
             {
-                return OperationResult<ShortUrl>.Fail("Invalid url", "Invalid_Url");
+                return OperationResult<ShortUrl>.Fail("Invalid url", "InvalidData");
             }
 
             bool isNotUniqueUrl = await _repository.ExistAsync(url);
             if (isNotUniqueUrl)
             {
-                return OperationResult<ShortUrl>.Fail("Url already exists", "Not_Unique_Url");
+                return OperationResult<ShortUrl>.Fail("Url already exists", "NotUnique");
             }
 
             try
@@ -57,6 +59,8 @@ namespace URLShortener.Services
                 return OperationResult<ShortUrl>.Fail(ex.Message);
             }
         }
+
+        // TODO: return ShortUrlInfoDto with all needed data
         public async Task<OperationResult<ShortUrl>> GetShortUrlInfoAsync(int id, string userId)
         {
             var validationResult = await ValidateUserAsync(userId);
@@ -64,12 +68,12 @@ namespace URLShortener.Services
                 return OperationResult<ShortUrl>.FromOperationResult(validationResult);
 
             if (id < 0)
-                return OperationResult<ShortUrl>.Fail("Id cannot be negative.", "Invalid_Id");
+                return OperationResult<ShortUrl>.Fail("Id cannot be negative.", "InvalidData");
 
             var shortUrl = await _repository.GetByIdAsync(id);
 
             if (shortUrl is null)
-                return OperationResult<ShortUrl>.Fail("No short url with such id", "Not_Found");
+                return OperationResult<ShortUrl>.Fail("No short url with such id", "NotFound");
 
             return OperationResult<ShortUrl>.Ok(shortUrl);
         }
@@ -81,17 +85,17 @@ namespace URLShortener.Services
                 return validationResult;
 
             if (id < 0)
-                return OperationResult.Fail("Id cannot be negative.", "Invalid_Id");
+                return OperationResult.Fail("Id cannot be negative.", "InvalidData");
 
             var shortUrl = await _repository.GetByIdAsync(id);
             if (shortUrl is null)
-                return OperationResult.Fail("No short url with such id", "Not_Found");
+                return OperationResult.Fail("No short url with such id", "NotFound");
 
             bool belongsToUser = shortUrl.UserId is not null && shortUrl.UserId.Equals(userId);
             var isAdmin = await IsAdminAsync(userId);
 
             if (!belongsToUser && !isAdmin)
-                return OperationResult.Fail("No rights for deletion", "No_Rights_For_Action");
+                return OperationResult.Fail("No rights for deletion", "Forbidden");
 
             try
             {
@@ -129,7 +133,7 @@ namespace URLShortener.Services
 
             var isAdmin = await IsAdminAsync(userId);
             if (!isAdmin)
-                return OperationResult.Fail("No rights for deletion", "No_Rights_For_Action");
+                return OperationResult.Fail("No rights for deletion", "Forbidden");
 
             try
             {
@@ -147,7 +151,7 @@ namespace URLShortener.Services
             return
                 await _userService.UserExistsAsync(userId)
                 ? OperationResult.Ok()
-                : OperationResult.Fail("User doesn't exist", "Uknown_User");
+                : OperationResult.Fail("User doesn't exist", "UknownUser");
         }
 
         private Task<bool> IsAdminAsync(string userId)

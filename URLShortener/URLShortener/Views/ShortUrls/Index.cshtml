@@ -1,0 +1,60 @@
+﻿@model List<URLShortener.Models.ShortUrl>
+
+@{
+    ViewData["Title"] = "Short URLs";
+}
+
+<h2>Short URLs</h2>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+@if (User.Identity is not null && User.Identity.IsAuthenticated)
+{
+    <form asp-action="Add" method="post" class="mb-3">
+        <input type="text" name="originalUrl" placeholder="Enter URL" style="width:300px;" required />
+        <button type="submit" class="btn btn-primary">Add URL</button>
+    </form>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Short URL</th>
+            <th>Original URL</th>
+            @if (User.Identity is not null && User.Identity.IsAuthenticated)
+            {
+                <th>Actions</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var url in Model)
+        {
+            <tr>
+                <td>
+                    <a href="/r/@url.Key" target="_blank">
+                        @Context.Request.Scheme://@Context.Request.Host/r/@url.Key
+                    </a>
+                </td>
+                <td>
+                    <a href="@url.OriginalUrl" target="_blank">@url.OriginalUrl</a>
+                </td>
+                @if (User.Identity is not null && User.Identity.IsAuthenticated)
+                {
+                    <td>
+                        <form asp-action="Delete" method="post" asp-route-id="@url.Id" onsubmit="return confirm('Are you sure?');">
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>

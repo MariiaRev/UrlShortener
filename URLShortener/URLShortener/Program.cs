@@ -1,6 +1,10 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using URLShortener.Data;
+using URLShortener.Services.Interfaces;
+using URLShortener.Services;
+using URLShortener.Repositories.Interfaces;
+using URLShortener.Repositories;
 
 namespace URLShortener
 {
@@ -37,6 +41,11 @@ namespace URLShortener
                 options.LoginPath = "/Identity/Account/Login";
             });
 
+            builder.Services.AddScoped<IShortUrlRepository, ShortUrlRepository>();
+            builder.Services.AddScoped<IUrlShortenerService, UrlShortenerService>();
+            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IUserUrlService, UserUrlService>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -57,7 +66,7 @@ namespace URLShortener
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=ShortUrls}/{action=Index}");
 
             app.MapRazorPages();
 
