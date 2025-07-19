@@ -8,33 +8,36 @@ namespace URLShortener.Controllers
 {
     // TODO: refactor according to DRY
 
-    public class ShortUrlsController(IUserUrlService service, IUrlShortenerService shortener) : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    public class ShortUrlsController(IUserUrlService service, IUrlShortenerService shortener) : ControllerBase
     {
         private readonly IUserUrlService _service = service;
         private readonly IUrlShortenerService _shortener = shortener;
 
-        // /ShortUrls/
+        // /ShortUrls
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Index(int page = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAll(int page = 1, int pageSize = 10)
         {
             var result = await _service.GetAllShortUrlsAsync(page, pageSize);
 
             if (!result.Success)
                 return StatusCode(500, "Unexpected error occurred.");
 
-            return View(result.Data);
+            return Ok(result.Data);
         }
 
         // /ShortUrls/Add
         [Authorize]
         [HttpPost]
+        [Route("add")]
         public async Task<IActionResult> Add(string originalUrl)
         {
             if (string.IsNullOrEmpty(originalUrl))
             {
                 ModelState.AddModelError("", "URL is required");
-                return RedirectToAction("Index");
+                return BadRequest();
             }
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -55,12 +58,13 @@ namespace URLShortener.Controllers
                 };
             }
 
-            return RedirectToAction("Index");
+            return Ok();
         }
 
         // /ShortUrls/Delete/5
         [Authorize]
-        [HttpPost]
+        [HttpDelete]
+        [Route("delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -82,11 +86,13 @@ namespace URLShortener.Controllers
                 };
             }
 
-            return RedirectToAction("Index");
+            return Ok();
         }
 
         // /ShortUrls/Details/5
         [Authorize]
+        [HttpGet]
+        [Route("details/{id}")]
         public async Task<IActionResult> Details(int id)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -108,11 +114,12 @@ namespace URLShortener.Controllers
                 };
             }
 
-            return View(result.Data);
+            return Ok(result.Data);
         }
 
         // /sho.rt/{shortCode}  - redirection
         [AllowAnonymous]
+        [HttpGet]
         [Route("sho.rt/{shortCode}")]
         public async Task<IActionResult> RedirectToOriginal(string shortCode)
         {

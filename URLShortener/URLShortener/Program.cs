@@ -5,6 +5,7 @@ using URLShortener.Services.Interfaces;
 using URLShortener.Services;
 using URLShortener.Repositories.Interfaces;
 using URLShortener.Repositories;
+using System.Text.Json.Serialization;
 
 namespace URLShortener
 {
@@ -15,7 +16,17 @@ namespace URLShortener
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllers()
+                .AddJsonOptions(options =>                                                                              // temporary for making swagger work with db entity, unnecessary when dto will be added
+                {
+                    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+                });
+
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new() { Title = "URL Shortener API", Version = "v1" });
+            });
 
             builder.Services.AddDbContext<AppDbContext>(options =>
             {
@@ -34,8 +45,6 @@ namespace URLShortener
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>();
 
-            builder.Services.AddRazorPages();
-
             builder.Services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = "/Identity/Account/Login";
@@ -48,27 +57,27 @@ namespace URLShortener
 
             var app = builder.Build();
 
+
             // Configure the HTTP request pipeline.
-            if (!app.Environment.IsDevelopment())
-            {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
 
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
 
-            app.UseRouting();
+            if (app.Environment.IsDevelopment())
+            {
+                //// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                //app.UseHsts();
+
+                app.UseSwagger();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "URL Shortener API V1");
+                });
+            }
 
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=ShortUrls}/{action=Index}");
-
-            app.MapRazorPages();
+            app.MapControllers();
 
             using (var scope = app.Services.CreateScope())
             {
