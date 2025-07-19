@@ -1,0 +1,21 @@
+<button (click)="toggleForms()">
+  {{ showLogin ? 'Switch to Register' : 'Switch to Login' }}
+</button>
+
+<div *ngIf="showLogin; else registerForm">
+  <h2>Login</h2>
+  <form (ngSubmit)="login()" #loginForm="ngForm">
+    <input name="username" [(ngModel)]="username" placeholder="Username" required />
+    <input name="password" [(ngModel)]="password" placeholder="Password" type="password" required />
+    <button type="submit" [disabled]="!loginForm.form.valid">Login</button>
+  </form>
+</div>
+
+<ng-template #registerForm>
+  <h2>Register</h2>
+  <form (ngSubmit)="register()" #registerFormRef="ngForm">
+    <input name="username" [(ngModel)]="regUsername" placeholder="Username" required />
+    <input name="password" [(ngModel)]="regPassword" placeholder="Password" type="password" required minlength="6" />
+    <button type="submit" [disabled]="!registerFormRef.form.valid">Register</button>
+  </form>
+</ng-template>

@@ -55,12 +55,24 @@ namespace URLShortener
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IUserUrlService, UserUrlService>();
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(policy =>
+                {
+                    policy.WithOrigins("http://localhost:4200") // port Angular
+                          .AllowAnyHeader()
+                          .AllowAnyMethod()
+                          .AllowCredentials();
+                });
+            });
+
             var app = builder.Build();
 
 
             // Configure the HTTP request pipeline.
 
             app.UseHttpsRedirection();
+            app.UseCors();
 
             if (app.Environment.IsDevelopment())
             {
